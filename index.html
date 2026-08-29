@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F5F8F4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B171A" media="(prefers-color-scheme: dark)" />
+    <meta name="description" content="cola_0908 的个人主页，汇集个人介绍、博客与 GitHub。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="cola_0908 · 个人主页" />
+    <meta property="og:description" content="认识 cola_0908，并访问个人博客与 GitHub。" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="cola_0908 · 个人主页" />
+    <meta name="twitter:description" content="认识 cola_0908，并访问个人博客与 GitHub。" />
+    <title>cola_0908 · 个人主页</title>
+    <script>
+      (() => {
+        const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        let savedTheme = null;
+        try {
+          savedTheme = localStorage.getItem("profile-theme-preference");
+          localStorage.removeItem("profile-theme");
+        } catch {
+          // 存储不可用时仍然跟随系统主题。
+        }
+        const hasManualTheme = savedTheme === "dark" || savedTheme === "light";
+        const theme = hasManualTheme ? savedTheme : systemTheme;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themeMode = hasManualTheme ? "manual" : "system";
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+    <link
+      rel="stylesheet"
+      href="./src/assets/fonts/misans/MiSans-Medium.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./src/assets/fonts/misans/MiSans-Bold.min.css"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="ambient-glow ambient-glow--one" aria-hidden="true"></div>
+    <div class="ambient-glow ambient-glow--two" aria-hidden="true"></div>
+    <div id="app"></div>
+    <noscript>请启用 JavaScript 以查看此个人主页。</noscript>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
