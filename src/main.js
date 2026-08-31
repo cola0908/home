@@ -93,6 +93,8 @@ app.innerHTML = `
 
     <footer class="desktop-footer">
       <p>© ${new Date().getFullYear()} ${escapeHtml(profile.name)}</p>
+      <span class="desktop-footer__separator" aria-hidden="true">｜</span>
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备2026054033号-2</a>
     </footer>
 
     <dialog class="child-window" aria-labelledby="child-window-title">

@@ -404,15 +404,33 @@ h1 span {
   left: 50%;
   display: flex;
   align-items: center;
-  flex-direction: column;
+  gap: 12px;
   color: var(--text);
-  font-size: 11px;
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: nowrap;
   transform: translateX(-50%);
 }
 
-.desktop-footer p {
+.desktop-footer p,
+.desktop-footer a {
   margin: 0;
   opacity: 0.78;
+}
+
+.desktop-footer__separator {
+  opacity: 0.52;
+}
+
+.desktop-footer a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.desktop-footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .child-window {
