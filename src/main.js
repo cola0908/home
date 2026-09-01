@@ -95,6 +95,8 @@ app.innerHTML = `
       <p>© ${new Date().getFullYear()} ${escapeHtml(profile.name)}</p>
       <span class="desktop-footer__separator" aria-hidden="true">｜</span>
       <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备2026054033号-2</a>
+      <span class="desktop-footer__separator" aria-hidden="true">｜</span>
+      <a href="https://beian.mps.gov.cn/#/query/webSearch?code=11010802050050" target="_blank" rel="noopener noreferrer">京公网安备11010802050050号</a>
     </footer>
 
     <dialog class="child-window" aria-labelledby="child-window-title">
