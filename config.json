@@ -1,0 +1,45 @@
+{
+	"head": {
+		"title": "cola_0908",
+		"description": "Author:cola_0908,Category:Personal Homepage",
+		"favicon": "favicon.ico"
+	},
+	"intro": {
+		"title": "cola_0908",
+		"subtitle": "Programming & finance & life",
+		"enter": "go!!!",
+		"supportAuthor": true,
+		"background": true
+	},
+	"main": {
+		"name": "cola_0908",
+		"signature": "Independent thinking",
+		"avatar": {
+			"link": "assets/cola0908.png",
+			"height": "100",
+			"width": "100"
+		},
+		"ul": {
+			"first": {
+				"href": "https://cola0908.com",
+				"icon": "bokeyuan",
+				"text": "Blog"
+			},
+			"second": {
+				"href": "https://cola0908.com/about",
+				"icon": "xiaolian",
+				"text": "About"
+			},
+			"third": {
+				"href": "mailto:cola0908.me@gmail.com",
+				"icon": "email",
+				"text": "Email"
+			},
+			"fourth": {
+				"href": "https://github.com/cola0908",
+				"icon": "github",
+				"text": "Github"
+			}
+		}
+	}
+}
