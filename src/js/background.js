@@ -45,6 +45,7 @@ let splatStack = [];
 pointers.push(new pointerPrototype());
 
 const { gl, ext } = getWebGLContext(canvas);
+const hdrOutput = createFluidHDROutput(canvas);
 
 if (isMobile()) {
 	config.DYE_RESOLUTION = 512;
@@ -329,6 +330,7 @@ const checkerboardShader = compileShader(gl.FRAGMENT_SHADER, `
     varying vec2 vUv;
     uniform sampler2D uTexture;
     uniform float aspectRatio;
+    uniform float outputScale;
 
     #define SCALE 25.0
 
@@ -336,7 +338,7 @@ const checkerboardShader = compileShader(gl.FRAGMENT_SHADER, `
         vec2 uv = floor(vUv * SCALE * vec2(aspectRatio, 1.0));
         float v = mod(uv.x + uv.y, 2.0);
         v = v * 0.1 + 0.8;
-        gl_FragColor = vec4(vec3(v), 1.0);
+        gl_FragColor = vec4(vec3(v * outputScale), 1.0);
     }
 `);
 
@@ -354,6 +356,7 @@ const displayShaderSource = `
     uniform sampler2D uSunrays;
     uniform sampler2D uDithering;
     uniform vec2 ditherScale;
+    uniform float outputScale;
     uniform vec2 texelSize;
 
     vec3 linearToGamma (vec3 color) {
@@ -401,7 +404,10 @@ const displayShaderSource = `
     #endif
 
         float a = max(c.r, max(c.g, c.b));
-        gl_FragColor = vec4(c, a);
+        // Reserve room for highlights when transferring the frame to the HDR canvas.
+        if (outputScale < 1.0 && a > 1.0)
+            c *= (2.0 - 1.0 / a) / a;
+        gl_FragColor = vec4(c * outputScale, clamp(a, 0.0, 1.0));
     }
 `;
 
@@ -965,8 +971,16 @@ function update(first) {
 	applyInputs();
 	if (!config.PAUSED)
 		step(dt);
-	render(null);
+	const hdr = hdrOutput.enabled;
+	render(null, hdr ? 0.5 : 1.0);
+	if (hdr && !hdrOutput.present()) render(null);
 	animationID = requestAnimationFrame(update);
+}
+
+function stopFluidBackground() {
+	cancelAnimationFrame(animationID);
+	hdrOutput.dispose();
+	canvas.remove();
 }
 
 function calcDeltaTime() {
@@ -1080,7 +1094,7 @@ function step(dt) {
 	dye.swap();
 }
 
-function render(target) {
+function render(target, outputScale = 1.0) {
 	if (config.BLOOM)
 		applyBloom(dye.read, bloom);
 	if (config.SUNRAYS) {
@@ -1102,26 +1116,28 @@ function render(target) {
 
 	let fbo = target == null ? null : target.fbo;
 	if (!config.TRANSPARENT)
-		drawColor(fbo, normalizeColor(config.BACK_COLOR));
+		drawColor(fbo, normalizeColor(config.BACK_COLOR), outputScale);
 	if (target == null && config.TRANSPARENT)
-		drawCheckerboard(fbo);
-	drawDisplay(fbo, width, height);
+		drawCheckerboard(fbo, outputScale);
+	drawDisplay(fbo, width, height, outputScale);
 }
 
-function drawColor(fbo, color) {
+function drawColor(fbo, color, outputScale) {
 	colorProgram.bind();
-	gl.uniform4f(colorProgram.uniforms.color, color.r, color.g, color.b, 1);
+	gl.uniform4f(colorProgram.uniforms.color, color.r * outputScale, color.g * outputScale, color.b * outputScale, 1);
 	blit(fbo);
 }
 
-function drawCheckerboard(fbo) {
+function drawCheckerboard(fbo, outputScale) {
 	checkerboardProgram.bind();
+	gl.uniform1f(checkerboardProgram.uniforms.outputScale, outputScale);
 	gl.uniform1f(checkerboardProgram.uniforms.aspectRatio, canvas.width / canvas.height);
 	blit(fbo);
 }
 
-function drawDisplay(fbo, width, height) {
+function drawDisplay(fbo, width, height, outputScale) {
 	displayMaterial.bind();
+	gl.uniform1f(displayMaterial.uniforms.outputScale, outputScale);
 	if (config.SHADING)
 		gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height);
 	gl.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));

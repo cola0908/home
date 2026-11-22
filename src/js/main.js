@@ -920,11 +920,7 @@ function switchPage() {
 		easing: "easeOutQuad",
 		d: DOM.path.getAttribute("pathdata:id"),
 		complete: function (anim) {
-			if (canvas) {
-				cancelAnimationFrame(animationID);
-				canvas.parentElement.removeChild(canvas);
-				canvas = null;
-			}
+			if (typeof stopFluidBackground === 'function') stopFluidBackground();
 		},
 	});
 
