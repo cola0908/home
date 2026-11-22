@@ -59,7 +59,12 @@ gulp.task('assets', function () {
 		.pipe(gulp.dest('./dist/assets'));
 })
 
-gulp.task('build', gulp.series('clean', 'assets', 'pug', 'css', 'js', 'html'))
+gulp.task('verification', function () {
+	return gulp.src('./src/6424603a293f78a0b4f9d2f57cb35c99.txt')
+		.pipe(gulp.dest('./dist'))
+})
+
+gulp.task('build', gulp.series('clean', 'assets', 'verification', 'pug', 'css', 'js', 'html'))
 gulp.task('default', gulp.series('build'))
 
 gulp.task('watch', function () {
